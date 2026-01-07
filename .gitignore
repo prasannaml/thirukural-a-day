@@ -1,41 +1,64 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Node modules
+node_modules/
+.pnp/
+.pnp.js
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Next.js build output
+.next/
+out/
+dist/
 
-# testing
-/coverage
+# Production
+build/
+.nyc_output/
 
-# next.js
-/.next/
-/out/
+# Local env files
+.env
+.env.local
+.env.*.local
 
-# production
-/build
+# Vercel
+.vercel/
+.now/
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# Lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
-next-env.d.ts
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# macOS
+.DS_Store
+
+# Misc
+*.log
+coverage/
+coverage-final.json
+.cache/
+tmp/
+temp/
+
+# Optional: JetBrains
+/.idea/
+
+# Optional: parcel, webpack cache
+.cache/
+*.cache
+
+# OS generated files
+Thumbs.db
+desktop.ini
