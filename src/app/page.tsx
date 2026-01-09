@@ -1,4 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import RandomKural from "@/components/RandomKural";
+import TestDateOverride from "@/components/TestDateOverride";
 import { getDateKeyIST, getKuralOfDay } from "@/lib/kuralOfDay";
 
 export default function Home() {
@@ -10,7 +13,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold">Thirukkural of the Day</h1>
 
       <p className="mt-2 text-sm text-gray-500">
-        {dateKey} · Kural #{kural.Number}
+        Date key: <strong>{dateKey}</strong> · Kural #{kural.Number}
       </p>
 
       <div className="mt-6 rounded-xl border bg-white p-6 dark:bg-black">
@@ -21,24 +24,23 @@ export default function Home() {
         </p>
 
         {kural.mk ? (
-          <div className="mt-6">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-zinc-100">
-              விளக்கம் (தமிழ்)
-            </h2>
-            <p className="mt-2 text-gray-700 dark:text-zinc-300">{kural.mk}</p>
-          </div>
+          <p className="mt-4 text-gray-700 dark:text-zinc-300">{kural.mk}</p>
         ) : null}
 
         {kural.explanation ? (
-          <div className="mt-6">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-zinc-100">
-              Explanation (English)
-            </h2>
-            <p className="mt-2 text-gray-700 dark:text-zinc-300">{kural.explanation}</p>
-          </div>
+          <p className="mt-4 text-gray-600 dark:text-zinc-400">{kural.explanation}</p>
         ) : null}
       </div>
+
+      {/* ✅ Test-only: renders a forced-date kural if ?date=YYYY-MM-DD is present */}
+      <TestDateOverride />
+
       <RandomKural />
+
+      {/* 👇 DEV ONLY */}
+      {process.env.NODE_ENV !== "production" && <TestDateOverride />}
+
+
     </main>
   );
 }
