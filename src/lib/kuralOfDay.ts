@@ -1,4 +1,4 @@
-import data from "@/data/thirukkural.json";
+import data from "@/data/thirukural_with_mk.json";
 
 export type Kural = {
   Number: number;
@@ -6,6 +6,7 @@ export type Kural = {
   Line2: string;
   mk?: string;
   explanation?: string;
+  english_mk_translation?: string;
 };
 
 function fnv1a32(input: string): number {
