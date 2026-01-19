@@ -6,6 +6,7 @@ import RandomKural from "@/components/RandomKural";
 import KuralFortuneCookie from "@/components/KuralFortuneCookie";
 import TestDateOverride from "@/components/TestDateOverride";
 import { getDateKeyIST, getKuralOfDay } from "@/lib/kuralOfDay";
+import ShareLinkButtons from "@/components/ShareLinkButtons";
 
 export default function Home() {
   const dateKey = getDateKeyIST();
@@ -35,23 +36,7 @@ export default function Home() {
         )}
 
         <div className="mt-6 flex justify-between">
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(window.location.href)}`}      
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-green-600 hover:underline dark:text-green-400"
-          >
-            Share on WhatsApp
-          </a>
-          <button
-            onClick={() => {
-              const text = `Thirukkural ${kural.Number}\n\n${kural.Line1}\n${kural.Line2}`;
-              navigator.clipboard.writeText(text);
-            }}
-            className="text-sm text-blue-600 hover:underline dark:text-blue-400"
-          >
-            Copy to Clipboard
-          </button>
+          <ShareLinkButtons/>
         </div>
       </div>
 
