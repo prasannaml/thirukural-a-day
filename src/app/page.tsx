@@ -36,7 +36,7 @@ export default function Home() {
 
         <div className="mt-6 flex justify-between">
           <a
-            href={`https://wa.me/?text=Thirukkural ${kural.Number}%0A%0A${encodeURIComponent(kural.Line1)}%0A${encodeURIComponent(kural.Line2)}`}
+            href={`https://wa.me/?text=${encodeURIComponent(window.location.href)}`}      
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-green-600 hover:underline dark:text-green-400"
