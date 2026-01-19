@@ -1,7 +1,7 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-
+import { Suspense } from "react";
 import RandomKural from "@/components/RandomKural";
 import KuralFortuneCookie from "@/components/KuralFortuneCookie";
 import TestDateOverride from "@/components/TestDateOverride";
@@ -56,7 +56,12 @@ export default function Home() {
       </div>
 
       {/* ✅ Test-only: renders a forced-date kural if ?date=YYYY-MM-DD is present */}
-      <TestDateOverride />
+      {process.env.NODE_ENV !== "production" && (
+    <Suspense fallback={null}>
+       <TestDateOverride />
+    </Suspense>
+  )}
+
 
       <RandomKural />
 
