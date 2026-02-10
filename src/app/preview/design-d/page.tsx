@@ -201,20 +201,6 @@ export default function PreviewDesignD() {
             </span>
           )}
         </div>
-
-        {/* Progress bar */}
-        <div className="mt-3">
-          <div className="flex items-center justify-between text-xs text-gray-400 dark:text-zinc-500">
-            <span>Kural #{kural.Number}</span>
-            <span>{kural.Number} of 1330</span>
-          </div>
-          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-zinc-800">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-rose-500 transition-all duration-500"
-              style={{ width: `${(kural.Number / 1330) * 100}%` }}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Card with decorative borders */}
