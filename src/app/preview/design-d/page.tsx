@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { KolamBackground } from "@/components/KolamBackground";
 import { getDateKeyIST, getKuralOfDay, type Kural } from "@/lib/kuralOfDay";
 
 type KuralWithTranslit = Kural & {
@@ -211,7 +212,13 @@ export default function PreviewDesignD() {
         <div className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-amber-500" />
         <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-amber-500" />
 
-        <div className="animate-card-enter rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-sm sm:px-8 sm:py-8 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="animate-card-enter relative overflow-hidden rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-sm sm:px-8 sm:py-8 dark:border-zinc-800 dark:bg-zinc-950">
+          {/* Daily kolam background pattern */}
+          <KolamBackground
+            dateKey={dateKey}
+            className="pointer-events-none absolute inset-0 m-auto h-full w-full opacity-[0.06] dark:opacity-[0.08] text-amber-600 dark:text-amber-400"
+          />
+
           {/* Simple top ornament line */}
           <div className="mb-4 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
             <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
