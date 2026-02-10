@@ -42,10 +42,18 @@ export default function PreviewDesignD() {
   const chapter = ADHIKARAM[chapterNum];
   const pal = chapterNum <= 38 ? "Aram" : chapterNum <= 108 ? "Porul" : "Inbam";
 
-  const navigate = useCallback((days: number) => {
-    setDateKey((prev) => addDays(prev, days));
-    setAnimKey((prev) => prev + 1);
-  }, []);
+  const navigate = useCallback(
+    (days: number) => {
+      setDateKey((prev) => {
+        const next = addDays(prev, days);
+        // Don't allow navigating past today
+        if (next > todayKey) return prev;
+        return next;
+      });
+      setAnimKey((prev) => prev + 1);
+    },
+    [todayKey],
+  );
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -109,8 +117,13 @@ export default function PreviewDesignD() {
           <button
             type="button"
             onClick={() => navigate(1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
-            title="Next day (→ key)"
+            disabled={isToday}
+            className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${
+              isToday
+                ? "cursor-not-allowed border-gray-200 text-gray-300 dark:border-zinc-800 dark:text-zinc-600"
+                : "border-gray-300 text-gray-600 hover:bg-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            }`}
+            title={isToday ? "You're on today's kural" : "Next day (→ key)"}
           >
             &rarr;
           </button>
@@ -228,7 +241,7 @@ export default function PreviewDesignD() {
         <kbd className="rounded border border-gray-300 px-1.5 py-0.5 font-mono text-xs dark:border-zinc-700">
           →
         </kbd>{" "}
-        arrow keys to navigate days
+        arrow keys to browse past kurals
       </p>
 
       {/* CSS for animations */}
