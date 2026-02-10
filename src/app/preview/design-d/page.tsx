@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import {
+  KolamCorner,
+  KolamDivider,
+  KolamOrnament,
+} from "@/components/PulliKolam";
 import { getDateKeyIST, getKuralOfDay, type Kural } from "@/lib/kuralOfDay";
 
 type KuralWithTranslit = Kural & {
@@ -219,20 +224,31 @@ export default function PreviewDesignD() {
 
       {/* Card with decorative borders */}
       <div className="relative mt-6" key={animKey}>
-        {/* Corner accents */}
-        <div className="absolute -top-1 -left-1 h-6 w-6 rounded-tl-md border-t-2 border-l-2 border-amber-500" />
-        <div className="absolute -top-1 -right-1 h-6 w-6 rounded-tr-md border-t-2 border-r-2 border-amber-500" />
-        <div className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-amber-500" />
-        <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-amber-500" />
+        {/* Pulli kolam corner accents */}
+        <KolamCorner
+          position="top-left"
+          className="absolute -top-3 -left-3 text-amber-500"
+        />
+        <KolamCorner
+          position="top-right"
+          className="absolute -top-3 -right-3 text-amber-500"
+        />
+        <KolamCorner
+          position="bottom-left"
+          className="absolute -bottom-3 -left-3 text-amber-500"
+        />
+        <KolamCorner
+          position="bottom-right"
+          className="absolute -bottom-3 -right-3 text-amber-500"
+        />
 
         <div className="animate-card-enter rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          {/* Top ornament */}
-          <div className="mb-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
-            <span className="text-sm">&#9670;</span>
-            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
-            <span className="text-base">&#10045;</span>
-            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
-            <span className="text-sm">&#9670;</span>
+          {/* Pulli kolam top ornament */}
+          <div className="mb-6 flex justify-center">
+            <KolamOrnament
+              size={64}
+              className="text-amber-400 dark:text-amber-600"
+            />
           </div>
 
           {/* Gradient kural text */}
@@ -255,10 +271,8 @@ export default function PreviewDesignD() {
             </p>
           )}
 
-          {/* Gradient divider */}
-          <div className="my-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-300 to-transparent dark:via-amber-700" />
-          </div>
+          {/* Pulli kolam divider */}
+          <KolamDivider className="my-6 text-amber-400 dark:text-amber-600" />
 
           {kural.mk && (
             <p className="text-base leading-relaxed text-gray-700 dark:text-zinc-300">
@@ -272,13 +286,12 @@ export default function PreviewDesignD() {
             </p>
           )}
 
-          {/* Bottom ornament */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
-            <span className="text-sm">&#9670;</span>
-            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
-            <span className="text-base">&#10045;</span>
-            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
-            <span className="text-sm">&#9670;</span>
+          {/* Pulli kolam bottom ornament */}
+          <div className="mt-6 flex justify-center">
+            <KolamOrnament
+              size={64}
+              className="text-amber-400 dark:text-amber-600"
+            />
           </div>
         </div>
       </div>
