@@ -1,0 +1,265 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { getDateKeyIST, getKuralOfDay, type Kural } from "@/lib/kuralOfDay";
+
+type KuralWithTranslit = Kural & {
+  transliteration1?: string;
+  transliteration2?: string;
+};
+
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(`${dateStr}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  const yyyy = d.getUTCFullYear();
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+const ADHIKARAM: Record<number, { tamil: string; english: string }> = {
+  1: { tamil: "கடவுள் வாழ்த்து", english: "Praise of God" },
+  2: { tamil: "வான்சிறப்பு", english: "The Blessing of Rain" },
+  3: { tamil: "நீத்தார் பெருமை", english: "The Greatness of Ascetics" },
+  4: { tamil: "அறன் வலியுறுத்தல்", english: "Assertion of Virtue" },
+  5: { tamil: "இல்வாழ்க்கை", english: "Domestic Life" },
+  6: { tamil: "வாழ்க்கைத் துணைநலம்", english: "Wife" },
+  7: { tamil: "மக்கட்பேறு", english: "Obtaining Children" },
+  8: { tamil: "அன்புடைமை", english: "Possession of Love" },
+  9: { tamil: "விருந்தோம்பல்", english: "Hospitality" },
+  10: { tamil: "இனியவை கூறல்", english: "Sweet Speech" },
+};
+
+export default function PreviewDesignD() {
+  const todayKey = getDateKeyIST();
+  const [dateKey, setDateKey] = useState(todayKey);
+  const [animKey, setAnimKey] = useState(0);
+  const kural = getKuralOfDay(dateKey) as KuralWithTranslit;
+
+  const isToday = dateKey === todayKey;
+  const chapterNum = Math.ceil(kural.Number / 10);
+  const chapter = ADHIKARAM[chapterNum];
+  const pal = chapterNum <= 38 ? "Aram" : chapterNum <= 108 ? "Porul" : "Inbam";
+
+  const navigate = useCallback((days: number) => {
+    setDateKey((prev) => addDays(prev, days));
+    setAnimKey((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") navigate(-1);
+      if (e.key === "ArrowRight") navigate(1);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
+
+  return (
+    <main className="relative mx-auto max-w-3xl px-4 py-10">
+      <Link
+        href="/preview"
+        className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+      >
+        &larr; Back to all designs
+      </Link>
+
+      <div className="mt-6 mb-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
+        <strong>Design D (Combined):</strong> All improvements together &mdash;
+        animations, cultural borders, chapter context, navigation, progress bar,
+        gradient text, keyboard support.
+      </div>
+
+      {/* Header with animation */}
+      <div className="animate-fade-in-up">
+        <h1 className="text-3xl font-bold tracking-tight">
+          Thirukkural of the Day
+        </h1>
+
+        {/* Navigation */}
+        <div className="mt-4 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            title="Previous day (← key)"
+          >
+            &larr;
+          </button>
+
+          <div className="flex-1 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {dateKey}
+              {!isToday && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDateKey(todayKey);
+                    setAnimKey((prev) => prev + 1);
+                  }}
+                  className="ml-2 text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  (today)
+                </button>
+              )}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate(1)}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            title="Next day (→ key)"
+          >
+            &rarr;
+          </button>
+        </div>
+
+        {/* Chapter badge + Pal badge */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span
+            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${
+              pal === "Aram"
+                ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                : pal === "Porul"
+                  ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                  : "border-rose-300 bg-rose-50 text-rose-700 dark:border-rose-700 dark:bg-rose-950 dark:text-rose-300"
+            }`}
+          >
+            {pal === "Aram"
+              ? "அறம் (Virtue)"
+              : pal === "Porul"
+                ? "பொருள் (Wealth)"
+                : "இன்பம் (Love)"}
+          </span>
+          {chapter && (
+            <span className="inline-flex items-center rounded-full border border-gray-300 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+              {chapter.tamil} &middot; {chapter.english}
+            </span>
+          )}
+        </div>
+
+        {/* Progress bar */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between text-xs text-gray-400 dark:text-zinc-500">
+            <span>Kural #{kural.Number}</span>
+            <span>{kural.Number} of 1330</span>
+          </div>
+          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-zinc-800">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-rose-500 transition-all duration-500"
+              style={{ width: `${(kural.Number / 1330) * 100}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Card with decorative borders */}
+      <div className="relative mt-6" key={animKey}>
+        {/* Corner accents */}
+        <div className="absolute -top-1 -left-1 h-6 w-6 rounded-tl-md border-t-2 border-l-2 border-amber-500" />
+        <div className="absolute -top-1 -right-1 h-6 w-6 rounded-tr-md border-t-2 border-r-2 border-amber-500" />
+        <div className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-amber-500" />
+        <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-amber-500" />
+
+        <div className="animate-card-enter rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+          {/* Top ornament */}
+          <div className="mb-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
+            <span className="text-sm">&#9670;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-base">&#10045;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-sm">&#9670;</span>
+          </div>
+
+          {/* Gradient kural text */}
+          <p className="text-center text-2xl leading-relaxed font-semibold">
+            <span className="bg-gradient-to-r from-amber-700 via-rose-600 to-amber-700 bg-clip-text text-transparent dark:from-amber-400 dark:via-rose-400 dark:to-amber-400">
+              {kural.Line1}
+              <br />
+              {kural.Line2}
+            </span>
+          </p>
+
+          {/* Transliteration */}
+          {kural.transliteration1 && (
+            <p className="mt-3 text-center font-mono text-xs tracking-wide text-gray-400 italic dark:text-zinc-500">
+              {kural.transliteration1}
+              <br />
+              {kural.transliteration2}
+            </p>
+          )}
+
+          {/* Gradient divider */}
+          <div className="my-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-300 to-transparent dark:via-amber-700" />
+          </div>
+
+          {kural.mk && (
+            <p className="text-base leading-relaxed text-gray-700 dark:text-zinc-300">
+              {kural.mk}
+            </p>
+          )}
+
+          {kural.english_mk_translation && (
+            <p className="mt-4 text-base leading-relaxed text-gray-600 italic dark:text-zinc-400">
+              &ldquo;{kural.english_mk_translation}&rdquo;
+            </p>
+          )}
+
+          {/* Bottom ornament */}
+          <div className="mt-6 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
+            <span className="text-sm">&#9670;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-base">&#10045;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-sm">&#9670;</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Keyboard hint */}
+      <p className="mt-4 text-center text-xs text-gray-400 dark:text-zinc-600">
+        Use{" "}
+        <kbd className="rounded border border-gray-300 px-1.5 py-0.5 font-mono text-xs dark:border-zinc-700">
+          ←
+        </kbd>{" "}
+        <kbd className="rounded border border-gray-300 px-1.5 py-0.5 font-mono text-xs dark:border-zinc-700">
+          →
+        </kbd>{" "}
+        arrow keys to navigate days
+      </p>
+
+      {/* CSS for animations */}
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes cardEnter {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.6s ease-out both;
+        }
+        .animate-card-enter {
+          animation: cardEnter 0.5s ease-out both;
+        }
+      `}</style>
+    </main>
+  );
+}
