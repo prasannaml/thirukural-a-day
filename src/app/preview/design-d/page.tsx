@@ -2,11 +2,6 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import {
-  KolamCorner,
-  KolamDivider,
-  KolamOrnament,
-} from "@/components/PulliKolam";
 import { getDateKeyIST, getKuralOfDay, type Kural } from "@/lib/kuralOfDay";
 
 type KuralWithTranslit = Kural & {
@@ -224,35 +219,22 @@ export default function PreviewDesignD() {
 
       {/* Card with decorative borders */}
       <div className="relative mt-6" key={animKey}>
-        {/* Pulli kolam corner accents */}
-        <KolamCorner
-          position="top-left"
-          className="absolute -top-3 -left-3 text-amber-500"
-        />
-        <KolamCorner
-          position="top-right"
-          className="absolute -top-3 -right-3 text-amber-500"
-        />
-        <KolamCorner
-          position="bottom-left"
-          className="absolute -bottom-3 -left-3 text-amber-500"
-        />
-        <KolamCorner
-          position="bottom-right"
-          className="absolute -bottom-3 -right-3 text-amber-500"
-        />
+        {/* Decorative corner accents */}
+        <div className="absolute -top-1 -left-1 h-6 w-6 rounded-tl-md border-t-2 border-l-2 border-amber-500" />
+        <div className="absolute -top-1 -right-1 h-6 w-6 rounded-tr-md border-t-2 border-r-2 border-amber-500" />
+        <div className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-amber-500" />
+        <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-amber-500" />
 
-        <div className="animate-card-enter rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          {/* Pulli kolam top ornament */}
-          <div className="mb-6 flex justify-center">
-            <KolamOrnament
-              size={64}
-              className="text-amber-400 dark:text-amber-600"
-            />
+        <div className="animate-card-enter rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-sm sm:px-8 sm:py-8 dark:border-zinc-800 dark:bg-zinc-950">
+          {/* Simple top ornament line */}
+          <div className="mb-4 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-sm">&#10045;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
           </div>
 
           {/* Gradient kural text — sized to fit 2 lines on mobile */}
-          <p className="text-center text-lg leading-relaxed font-semibold sm:text-2xl">
+          <p className="text-center text-base leading-relaxed font-semibold sm:text-2xl">
             <span
               className={`bg-gradient-to-r ${gradient.light} ${gradient.dark} bg-clip-text text-transparent`}
             >
@@ -271,8 +253,10 @@ export default function PreviewDesignD() {
             </p>
           )}
 
-          {/* Pulli kolam divider */}
-          <KolamDivider className="my-6 text-amber-400 dark:text-amber-600" />
+          {/* Simple flat divider */}
+          <div className="my-5 flex items-center gap-2">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-300 to-transparent dark:via-amber-700" />
+          </div>
 
           {kural.mk && (
             <p className="text-base leading-relaxed text-gray-700 dark:text-zinc-300">
@@ -286,12 +270,11 @@ export default function PreviewDesignD() {
             </p>
           )}
 
-          {/* Pulli kolam bottom ornament */}
-          <div className="mt-6 flex justify-center">
-            <KolamOrnament
-              size={64}
-              className="text-amber-400 dark:text-amber-600"
-            />
+          {/* Simple bottom ornament line */}
+          <div className="mt-4 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
+            <span className="text-sm">&#10045;</span>
+            <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
           </div>
         </div>
       </div>
