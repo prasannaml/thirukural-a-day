@@ -251,8 +251,8 @@ export default function PreviewDesignD() {
             />
           </div>
 
-          {/* Gradient kural text */}
-          <p className="text-center text-2xl leading-relaxed font-semibold">
+          {/* Gradient kural text — sized to fit 2 lines on mobile */}
+          <p className="text-center text-lg leading-relaxed font-semibold sm:text-2xl">
             <span
               className={`bg-gradient-to-r ${gradient.light} ${gradient.dark} bg-clip-text text-transparent`}
             >
