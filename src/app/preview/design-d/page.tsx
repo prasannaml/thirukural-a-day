@@ -216,7 +216,7 @@ export default function PreviewDesignD() {
           {/* Daily kolam background pattern */}
           <KolamBackground
             dateKey={dateKey}
-            className="pointer-events-none absolute inset-0 m-auto h-full w-full opacity-[0.06] dark:opacity-[0.08] text-amber-600 dark:text-amber-400"
+            className="pointer-events-none absolute inset-0 m-auto h-full w-full opacity-[0.12] dark:opacity-[0.18] text-amber-600 dark:text-amber-400"
           />
 
           {/* Simple top ornament line */}
