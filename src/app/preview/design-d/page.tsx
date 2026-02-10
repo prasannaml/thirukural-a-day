@@ -9,6 +9,54 @@ type KuralWithTranslit = Kural & {
   transliteration2?: string;
 };
 
+// Daily rotating gradient palettes for kural text
+const GRADIENTS = [
+  // amber -> rose (original)
+  {
+    light: "from-amber-700 via-rose-600 to-amber-700",
+    dark: "dark:from-amber-400 dark:via-rose-400 dark:to-amber-400",
+  },
+  // emerald -> teal
+  {
+    light: "from-emerald-700 via-teal-600 to-emerald-700",
+    dark: "dark:from-emerald-400 dark:via-teal-400 dark:to-emerald-400",
+  },
+  // purple -> indigo
+  {
+    light: "from-purple-700 via-indigo-600 to-purple-700",
+    dark: "dark:from-purple-400 dark:via-indigo-400 dark:to-purple-400",
+  },
+  // orange -> red
+  {
+    light: "from-orange-700 via-red-600 to-orange-700",
+    dark: "dark:from-orange-400 dark:via-red-400 dark:to-orange-400",
+  },
+  // sky -> blue
+  {
+    light: "from-sky-700 via-blue-600 to-sky-700",
+    dark: "dark:from-sky-400 dark:via-blue-400 dark:to-sky-400",
+  },
+  // pink -> fuchsia
+  {
+    light: "from-pink-700 via-fuchsia-600 to-pink-700",
+    dark: "dark:from-pink-400 dark:via-fuchsia-400 dark:to-pink-400",
+  },
+  // yellow -> amber
+  {
+    light: "from-yellow-700 via-amber-600 to-yellow-700",
+    dark: "dark:from-yellow-400 dark:via-amber-400 dark:to-yellow-400",
+  },
+];
+
+function getGradientForDate(dateKey: string) {
+  // Simple hash of date string to pick a gradient
+  let hash = 0;
+  for (let i = 0; i < dateKey.length; i++) {
+    hash = (hash * 31 + dateKey.charCodeAt(i)) | 0;
+  }
+  return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
+}
+
 function addDays(dateStr: string, days: number): string {
   const d = new Date(`${dateStr}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + days);
@@ -41,6 +89,7 @@ export default function PreviewDesignD() {
   const chapterNum = Math.ceil(kural.Number / 10);
   const chapter = ADHIKARAM[chapterNum];
   const pal = chapterNum <= 38 ? "Aram" : chapterNum <= 108 ? "Porul" : "Inbam";
+  const gradient = getGradientForDate(dateKey);
 
   const navigate = useCallback(
     (days: number) => {
@@ -188,7 +237,9 @@ export default function PreviewDesignD() {
 
           {/* Gradient kural text */}
           <p className="text-center text-2xl leading-relaxed font-semibold">
-            <span className="bg-gradient-to-r from-amber-700 via-rose-600 to-amber-700 bg-clip-text text-transparent dark:from-amber-400 dark:via-rose-400 dark:to-amber-400">
+            <span
+              className={`bg-gradient-to-r ${gradient.light} ${gradient.dark} bg-clip-text text-transparent`}
+            >
               {kural.Line1}
               <br />
               {kural.Line2}
