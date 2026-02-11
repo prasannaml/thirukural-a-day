@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance for AI assistants working on the Thirukural-A-Day codebase.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -36,12 +36,17 @@ src/
     globals.css             # Global styles + Tailwind imports
     fortune-cookie/
       page.tsx              # Fortune cookie interactive page
+    preview/
+      page.tsx              # UI design showcase index
+      design-{a,b,c,d}/    # Four design direction previews
   components/
     DailyKuralFortune.tsx   # Modal for daily kural
     KuralFortuneCookie.tsx  # Fortune cookie with localStorage persistence
     RandomKural.tsx         # Random kural picker
     ShareLinkButtons.tsx    # WhatsApp + Web Share API sharing
     TestDateOverride.tsx    # Dev-only date override via ?date= query param
+    KolamBackground.tsx     # Generative SVG kolam pattern (date-seeded PRNG)
+    PulliKolam.tsx          # Pulli kolam SVG pattern
   lib/
     kuralOfDay.ts           # Core logic: date hashing, kural selection
   data/
@@ -73,6 +78,7 @@ scripts/
 - Modal/animation patterns use state transitions (`isOpening` -> `isOpen`) with CSS transitions
 - `TestDateOverride` only renders when `NODE_ENV !== "production"`
 - `KuralFortuneCookie` uses localStorage for daily persistence (same fortune per day)
+- `KolamBackground` generates unique SVG kolam patterns per date using a seeded PRNG (Lehmer/Park-Miller), ensuring reproducible decorative backgrounds
 
 ### Path Alias
 - `@/*` maps to `./src/*` (configured in tsconfig.json)
