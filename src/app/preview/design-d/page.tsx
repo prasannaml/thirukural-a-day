@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { KolamBackground } from "@/components/KolamBackground";
 import { getDateKeyIST, getKuralOfDay, type Kural } from "@/lib/kuralOfDay";
+import chaptersData from "@/data/chapters.json";
 
 type KuralWithTranslit = Kural & {
   transliteration1?: string;
@@ -67,18 +67,27 @@ function addDays(dateStr: string, days: number): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-const ADHIKARAM: Record<number, { tamil: string; english: string }> = {
-  1: { tamil: "கடவுள் வாழ்த்து", english: "Praise of God" },
-  2: { tamil: "வான்சிறப்பு", english: "The Blessing of Rain" },
-  3: { tamil: "நீத்தார் பெருமை", english: "The Greatness of Ascetics" },
-  4: { tamil: "அறன் வலியுறுத்தல்", english: "Assertion of Virtue" },
-  5: { tamil: "இல்வாழ்க்கை", english: "Domestic Life" },
-  6: { tamil: "வாழ்க்கைத் துணைநலம்", english: "Wife" },
-  7: { tamil: "மக்கட்பேறு", english: "Obtaining Children" },
-  8: { tamil: "அன்புடைமை", english: "Possession of Love" },
-  9: { tamil: "விருந்தோம்பல்", english: "Hospitality" },
-  10: { tamil: "இனியவை கூறல்", english: "Sweet Speech" },
-};
+// Convert chapters array to lookup map
+const ADHIKARAM = chaptersData.adhikarams.reduce(
+  (acc, ch) => {
+    acc[ch.number] = { tamil: ch.tamil, english: ch.english };
+    return acc;
+  },
+  {} as Record<number, { tamil: string; english: string }>,
+);
+
+// Helper to get Pal info
+function getPalInfo(chapterNum: number) {
+  for (const pal of chaptersData.pals) {
+    if (chapterNum >= pal.chapters[0] && chapterNum <= pal.chapters[1]) {
+      return {
+        name: pal.nameShort,
+        nameEnglish: pal.nameShortEnglish,
+      };
+    }
+  }
+  return { name: "அறம்", nameEnglish: "Virtue" }; // fallback
+}
 
 export default function PreviewDesignD() {
   const todayKey = getDateKeyIST();
@@ -89,7 +98,7 @@ export default function PreviewDesignD() {
   const isToday = dateKey === todayKey;
   const chapterNum = Math.ceil(kural.Number / 10);
   const chapter = ADHIKARAM[chapterNum];
-  const pal = chapterNum <= 38 ? "Aram" : chapterNum <= 108 ? "Porul" : "Inbam";
+  const palInfo = getPalInfo(chapterNum);
   const gradient = getGradientForDate(dateKey);
 
   const navigate = useCallback(
@@ -179,29 +188,39 @@ export default function PreviewDesignD() {
           </button>
         </div>
 
-        {/* Chapter badge + Pal badge */}
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+      </div>
+
+      {/* Pal, Kural Number, and Chapter - all on one line */}
+      <div className="mt-6 flex items-center justify-between gap-2">
+        <span
+          className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${
+            palInfo.nameEnglish === "Virtue"
+              ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+              : palInfo.nameEnglish === "Wealth"
+                ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                : "border-pink-300 bg-pink-50 text-pink-700 dark:border-pink-600 dark:bg-pink-950 dark:text-pink-400"
+          }`}
+        >
+          பால்: {palInfo.name} (Section: {palInfo.nameEnglish})
+        </span>
+
+        <span className="text-sm font-medium text-gray-600 dark:text-zinc-400">
+          Kural #{kural.Number}
+        </span>
+
+        {chapter && (
           <span
             className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${
-              pal === "Aram"
+              palInfo.nameEnglish === "Virtue"
                 ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                : pal === "Porul"
+                : palInfo.nameEnglish === "Wealth"
                   ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-700 dark:bg-blue-950 dark:text-blue-300"
-                  : "border-rose-300 bg-rose-50 text-rose-700 dark:border-rose-700 dark:bg-rose-950 dark:text-rose-300"
+                  : "border-pink-300 bg-pink-50 text-pink-700 dark:border-pink-600 dark:bg-pink-950 dark:text-pink-400"
             }`}
           >
-            {pal === "Aram"
-              ? "அறம் (Virtue)"
-              : pal === "Porul"
-                ? "பொருள் (Wealth)"
-                : "இன்பம் (Love)"}
+            அதிகாரம்: {chapter.tamil} (Chapter: {chapter.english})
           </span>
-          {chapter && (
-            <span className="inline-flex items-center rounded-full border border-gray-300 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
-              {chapter.tamil} &middot; {chapter.english}
-            </span>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Card with decorative borders */}
@@ -213,12 +232,6 @@ export default function PreviewDesignD() {
         <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-amber-500" />
 
         <div className="animate-card-enter relative overflow-hidden rounded-2xl border border-gray-200 bg-white px-6 py-6 shadow-sm sm:px-8 sm:py-8 dark:border-zinc-800 dark:bg-zinc-950">
-          {/* Daily kolam background pattern */}
-          <KolamBackground
-            dateKey={dateKey}
-            className="pointer-events-none absolute inset-0 m-auto h-full w-full opacity-[0.06] dark:opacity-[0.08] text-amber-600 dark:text-amber-400"
-          />
-
           {/* Simple top ornament line */}
           <div className="mb-4 flex items-center justify-center gap-2 text-amber-400 dark:text-amber-600">
             <div className="h-px w-12 bg-amber-300 dark:bg-amber-700" />
