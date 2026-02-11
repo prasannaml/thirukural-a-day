@@ -95,7 +95,12 @@ export default function Home() {
         )}
 
         <div className="mt-6 flex justify-between">
-          <ShareLinkButtons/>
+          <ShareLinkButtons
+            kural={kural}
+            dateKey={dateKey}
+            palInfo={palInfo}
+            chapter={chapter}
+          />
         </div>
       </div>
 

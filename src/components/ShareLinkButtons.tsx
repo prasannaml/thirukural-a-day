@@ -1,12 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ShareAsImage from "./ShareAsImage";
+import type { Kural } from "@/lib/kuralOfDay";
 
 type Props = {
   title?: string;
+  kural?: Kural;
+  dateKey?: string;
+  palInfo?: { name: string; nameEnglish: string };
+  chapter?: { tamil: string; english: string };
 };
 
-export default function ShareLinkButtons({ title = "Thirukkural – A Day" }: Props) {
+export default function ShareLinkButtons({
+  title = "Thirukkural – A Day",
+  kural,
+  dateKey,
+  palInfo,
+  chapter,
+}: Props) {
   const [url, setUrl] = useState<string>("");
 
   useEffect(() => {
@@ -37,8 +49,17 @@ export default function ShareLinkButtons({ title = "Thirukkural – A Day" }: Pr
         }}
         className="text-sm text-blue-600 hover:underline dark:text-blue-400"
       >
-        Share
+        Share Link
       </button>
+
+      {kural && dateKey && palInfo && chapter && (
+        <ShareAsImage
+          kural={kural}
+          dateKey={dateKey}
+          palInfo={palInfo}
+          chapter={chapter}
+        />
+      )}
     </div>
   );
 }
