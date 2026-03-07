@@ -373,10 +373,16 @@ export default function TokenListenerPage() {
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (event.error === "no-speech") return;
-      addLog(`Recognition error: ${event.error}`, "alert");
-      if (event.error === "not-allowed") {
+      const fatalErrors = ["not-allowed", "service-not-allowed"];
+      if (fatalErrors.includes(event.error)) {
         isListeningRef.current = false;
         setIsListening(false);
+        addLog(
+          "Microphone access denied or speech service unavailable. Please allow microphone access in your browser and try again.",
+          "alert"
+        );
+      } else {
+        addLog(`Recognition error: ${event.error}`, "alert");
       }
     };
 
