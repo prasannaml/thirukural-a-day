@@ -323,7 +323,7 @@ export default function TokenListenerPage() {
     [triggerMatch, triggerApproach, addLog]
   );
 
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
     const target = targetToken.trim().toUpperCase();
     if (!target || target.length < 2) {
       addLog("Please enter your token (e.g. A123, BC45)", "alert");
@@ -335,6 +335,18 @@ export default function TokenListenerPage() {
       (window as Window & { webkitSpeechRecognition?: typeof SpeechRecognition })
         .webkitSpeechRecognition;
     if (!SR) return;
+
+    // Explicitly request mic — triggers the browser permission prompt
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach((t) => t.stop()); // release; SR manages its own stream
+    } catch {
+      addLog(
+        "Microphone access denied. Please allow microphone access in your browser settings.",
+        "alert"
+      );
+      return;
+    }
 
     const recognition = new SR();
     recognition.continuous = true;
